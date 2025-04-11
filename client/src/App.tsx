@@ -1,23 +1,24 @@
 import { useState, useEffect } from 'react'
 import './App.css'
+import { PlayerTile } from './components/playerTile';
+import { fetchClanPlayers } from './supabaseAPI';
 
 function App() {
-  const [message, setMessage] = useState("");
+  const [players, setPlayers] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/hello")
-      .then((res) => res.json())
-      .then((data) => setMessage(data.message))
-      .catch((err) => console.error(err));
+    fetchClanPlayers().then(data => setPlayers(data));
   }, []);
 
   return (
-    <>
-      <h1>React + Node.js</h1>
-      <p>{message}</p>
-     
-    </>
-  )
+    <div className="container py-4">
+  
+      <h2 className="mb-3">Clan Players</h2>
+      {players && players.map((player: any) => (
+        <PlayerTile key={player.player_tag} data={player} />
+      ))}
+    </div>
+  );
 }
 
 export default App
