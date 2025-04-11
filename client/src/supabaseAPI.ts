@@ -4,7 +4,22 @@ const api = axios.create({
     baseURL: import.meta.env.VITE_SERVER_URL
 });
 
-export async function fetchClanPlayers() {
+export interface ClanPlayer {
+  active: boolean;
+  player_tag: string;
+  name: string;
+  role: string;
+  trophies: number;
+  level: number;
+  town_hall: number;
+  donations: number;
+  donations_received: number;
+  wars_participated_in: number;
+  wars_missed_attacks: number;
+  capital_raids_participated_in: number;
+}
+
+export async function fetchClanPlayers(): Promise<ClanPlayer[]> {
   try {
     const response = await api.get('api/players');
     return response.data;
