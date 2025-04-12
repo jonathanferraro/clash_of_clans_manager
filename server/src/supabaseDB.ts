@@ -109,16 +109,16 @@ export async function selectClanPlayerAttacks(playerTag: string) {
   }
 }
 
-export async function selectNewestClanWarsIDs() {
+export async function selectNewestClanWarsIDs(numOfPastWars: number) {
   try {
     const { data, error } = await supabase
     .from('clash_clan_wars')
     .select('war_id')
     .order('created_at', { ascending: false })
-    .limit(10);
+    .limit(numOfPastWars);
 
     if (error) throw error;
-    console.log(data)
+
     return data;
 
   } catch (error: any) {
@@ -144,6 +144,41 @@ export async function selectPlayerWarIDs(warIDs: number[], playerTag: string) {
     return [];
   } 
 }
+
+export async function selectPlayerPastFiveWars(warIDs: number[], playerTag: string) {
+  try {
+    const { data, error } = await supabase
+      .from('clash_clan_war_attacks')
+      .select('war_id, stars, destruction_percentage')
+      .in('war_id', warIDs)
+      .eq('attacker_tag', playerTag)
+      .order('war_id', { ascending: false }) 
+      .limit(10); 
+    if (error) throw error;
+
+    // Convert attacks into a war-based map and return 5 unique wars
+    const warMap = new Map<number, any[]>();
+
+    for (const attack of data || []) {
+      if (!warMap.has(attack.war_id)) warMap.set(attack.war_id, []);
+      warMap.get(attack.war_id)!.push(attack);
+    }
+
+    const result = Array.from(warMap.entries())
+      .slice(0, 5)
+      .map(([war_id, attacks]) => ({ war_id, attacks }));
+
+    return result;
+
+  } catch (error: any) {
+    console.error('Error fetching player war attacks from Supabase:', error.message);
+    return [];
+  }
+}
+
+
+
+
 
 
 

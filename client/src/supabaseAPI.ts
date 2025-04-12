@@ -31,11 +31,33 @@ export async function fetchClanPlayers(): Promise<ClanPlayer[]> {
 
 export async function fetchPlayerLastTenWarsCount(playerTag: string) {
     try {
-      const response = await api.get(`api/playerLastTenWars?playerTag=${playerTag}`);
-      return response.data.count;
+      const encodedPlayerTag = encodeURIComponent(playerTag);
+      const response = await api.get(`api/playerLastTenWars/${encodedPlayerTag}`);
+      return response.data;
     } catch (error: any) {
-      console.error('Error fetching player wars count:', error.message);
+      console.error('Error fetching player wars count:', {
+        message: error.message,
+        response: error.response?.data, 
+      });
+
       return 0; 
     }
+}
+
+export async function fetchPlayerLastFiveWars(playerTag: string) {
+  try {
+    const encodedPlayerTag = encodeURIComponent(playerTag);
+    const response = await api.get(`api/playerLastFiveWars/${encodedPlayerTag}`);
+    return response.data;
+  } catch (error: any) {
+    console.error('Error fetching player wars count:', {
+      message: error.message,
+      response: error.response?.data, 
+    });
+
+    return []; 
   }
+
+}
+
   

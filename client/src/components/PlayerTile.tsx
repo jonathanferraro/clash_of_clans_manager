@@ -1,12 +1,19 @@
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { fetchPlayerLastTenWarsCount, fetchPlayerLastFiveWars } from "../supabaseAPI";
 
+type PlayerWar = {
+  war_id: number;
+  attacks: WarAttack[];
+};
 type WarAttack = {
   stars: number;
-  destruction: number;
+  destruction_percentage: number;
 };
 
 type PlayerData = {
+    active: boolean,
+    player_tag: string,
     level: number;
     town_hall: number;
     name: string;
@@ -20,8 +27,30 @@ type PlayerData = {
   
   export function PlayerTile({ data }: { data: PlayerData }) {
     const [showDetails, setShowDetails] = useState(false);
+    const [playerLast10WarsCount, setPlayerLast10WarsCount] = useState(0);
+    const [playerLast5Wars, setPlayerLast5Wars] = useState<PlayerWar[]>([]);
   
     const handleToggle = () => setShowDetails(!showDetails);
+
+    function getPlayerLast10WarsCount(playertag: string) {
+      fetchPlayerLastTenWarsCount(playertag).then((count) => setPlayerLast10WarsCount(count));
+    }
+
+    function getPlayerLast5Wars(playerTag: string) {
+      fetchPlayerLastFiveWars(playerTag).then((wars) => setPlayerLast5Wars(wars));
+    }
+
+    useEffect(() => {
+      if (data.player_tag) { 
+        getPlayerLast10WarsCount(data.player_tag);
+      }
+    }, [data.player_tag]);
+
+    useEffect(() => {
+      if (data.player_tag) {
+        getPlayerLast5Wars(data.player_tag);
+      }
+    }, [data.player_tag])
   
     return (
       <div className="card mb-4 shadow-sm p-3">
@@ -46,7 +75,7 @@ type PlayerData = {
           </div>
         </div>
   
-        <p className="mb-2"># of past 10 wars participated in: <strong>TBD</strong></p>
+        <p className="mb-2"># of past 10 wars participated in: <strong>{playerLast10WarsCount}</strong></p>
   
         <div className="mb-2">
           <button className="btn btn-outline-primary btn-sm" onClick={handleToggle}>
@@ -56,13 +85,21 @@ type PlayerData = {
   
         {showDetails && (
           <div className="border rounded p-3 bg-light">
-            {/* {data.past_5_attacks.map((attack, index) => (
-              <p key={index} className="mb-1">
-                <strong>Attack {index + 1}:</strong>{" "}
-                {"★".repeat(attack.stars)}{"☆".repeat(3 - attack.stars)} -{" "}
-                {attack.destruction}%
-              </p>
-            ))} */}
+            {playerLast5Wars && playerLast5Wars.map((war, index) => (
+              <div key={index}>
+                <p className="mb-1">
+                  <strong>Attack {index + 1}:</strong>{" "}
+                  {"★".repeat(war.attacks[0].stars)}{"☆".repeat(3 - war.attacks[0].stars)} -{" "}
+                  {war.attacks[0].destruction_percentage}%
+                </p>
+                {war.attacks.length > 1 && 
+                  <p className="mb-1">
+                    <strong>Attack {index + 1}:</strong>{" "}
+                    {"★".repeat(war.attacks[1].stars)}{"☆".repeat(3 - war.attacks[1].stars)} -{" "}
+                    {war.attacks[1].destruction_percentage}%
+                  </p>}
+              </div>
+            ))}
           </div>
         )}
       </div>

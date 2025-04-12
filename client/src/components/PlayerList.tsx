@@ -56,7 +56,7 @@ export function PlayerList() {
   
         <h2 className="mb-3">Clan Players</h2>
         {players && players.map((player: any) => (
-          <PlayerTile key={player.player_tag} data={player} />
+          player.active && <PlayerTile key={player.player_tag} data={player} />
         ))}
       </div>
     )
