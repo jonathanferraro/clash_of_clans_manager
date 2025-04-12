@@ -8,7 +8,15 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors());
+const allowedOrigins = [process.env.FRONTEND_URL || "http://localhost:5173"];
+
+app.use(
+  cors({
+    origin: allowedOrigins,
+    credentials: false, 
+  })
+);
+
 app.use(express.json());
 
 app.use("/api", clanRoutes);
