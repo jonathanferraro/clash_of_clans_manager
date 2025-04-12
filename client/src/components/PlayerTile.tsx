@@ -22,6 +22,7 @@ type PlayerData = {
   donations_received: number;
   wars_participated_in: number;
   wars_missed_attacks: number;
+  capital_raids_participated_in: number;
 };
 
 export function PlayerTile({ data }: { data: PlayerData }) {
@@ -90,6 +91,11 @@ export function PlayerTile({ data }: { data: PlayerData }) {
           </p>
         </div>
       </div>
+
+      <p className="mb-2">
+        # of capital raids participated in:{" "}
+        <strong className="text-primary">{data.capital_raids_participated_in}</strong>
+      </p>
 
       <p className="mb-2">
         # of past 10 wars participated in:{" "}
