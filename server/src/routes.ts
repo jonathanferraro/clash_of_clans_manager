@@ -1,19 +1,34 @@
 import express, { Router, Request, Response } from 'express';
-import { selectClanPlayers, selectNewestClanWarsIDs, selectPlayerPastFiveWars, selectPlayerWarIDs } from "./supabaseDB";
+
+import {
+    selectClanPlayers,
+    selectNewestClanWarsIDs,
+    selectPlayerPastFiveWars,
+    selectPlayerWarIDs,
+} from './railwayDB';
+
+import { ClanPlayer, PlayerPastWarResult } from './interfaces';
+
 const router: Router = express.Router();
 
 router.get("/players", async (req, res) => {
     try {
         const data = await selectClanPlayers();
+
+        if (data === undefined) {
+            throw new Error("Failed to fetch clan players from DB");
+       }
+
         res.status(200).json(data);
-    } catch (error) {
+    } catch (error: any) {
+        console.error("Error in /players route:", error.message)
         res.status(500).json({ error: "Failed to fetch clan players" });
     }
 });
 
 router.get("/playerLastTenWars/:playerTag", async (req: Request, res: Response) => { 
     try {
-        const playerTag = req.params.playerTag;
+        const playerTag: string | undefined = req.params.playerTag;
         if (!playerTag) {
             return res.status(400).json({ error: "Player tag is required" });
         }
