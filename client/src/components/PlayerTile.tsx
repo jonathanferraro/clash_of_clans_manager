@@ -11,6 +11,7 @@ type WarAttack = {
 };
 
 type PlayerData = {
+  created_at: string;
   active: boolean;
   player_tag: string;
   level: number;
@@ -44,6 +45,15 @@ export function PlayerTile({ data }: { data: PlayerData }) {
     );
   }
 
+  function formatDate(date: string) {
+    const inputDate: any = new Date(date);
+    const now: any = new Date();
+
+    const diffMs: any = now - inputDate;
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    return diffDays;
+  }
+
   useEffect(() => {
     if (data.player_tag) {
       getPlayerLast10WarsCount(data.player_tag);
@@ -68,6 +78,11 @@ export function PlayerTile({ data }: { data: PlayerData }) {
         <div className="text-end">
           <strong className="text-warning">{data.trophies}</strong> Trophies
         </div>
+      </div>
+
+      <div className="row mb-2">
+        <p>Days in clan: {formatDate(data.created_at)}</p>
+
       </div>
 
       <div className="row mb-2">
