@@ -113,10 +113,11 @@ export function PlayerList() {
   return (
     <div className="container-fluid container-sm py-4 " style={{ maxWidth: '700px' }}>
        {/* Header section: Title, Search, Sort */}
-      <div className="d-flex flex-column flex-md-row justify-content-md-between align-items-md-center mb-4 gap-3">
-        <h2 className="text-primary mb-0 order-md-1">
+       <h2 className="text-primary mb-3 order-md-1">
           Clan Players ({players.length}) 
         </h2>
+
+      <div className="d-flex flex-column flex-md-row justify-content-md-between align-items-md-center mb-4 gap-3">
 
         {/* Search  */}
         <div className="input-group order-md-2 flex-grow-1 flex-md-grow-0" style={{ maxWidth: '350px' }}> 
