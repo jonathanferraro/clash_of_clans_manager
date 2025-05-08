@@ -5,6 +5,7 @@ const api = axios.create({
 });
 
 export interface ClanPlayer {
+  created_at: string;
   active: boolean;
   player_tag: string;
   name: string;
@@ -35,10 +36,10 @@ export async function fetchPlayerLastTenWarsCount(playerTag: string) {
       const response = await api.get(`api/playerLastTenWars/${encodedPlayerTag}`);
       return response.data;
     } catch (error: any) {
-      console.error('Error fetching player wars count:', {
-        message: error.message,
-        response: error.response?.data, 
-      });
+      // console.error('Error fetching player wars count:', {
+      //   message: error.message,
+      //   response: error.response?.data, 
+      // });
 
       return 0; 
     }
@@ -50,10 +51,10 @@ export async function fetchPlayerLastFiveWars(playerTag: string) {
     const response = await api.get(`api/playerLastFiveWars/${encodedPlayerTag}`);
     return response.data;
   } catch (error: any) {
-    console.error('Error fetching player wars count:', {
-      message: error.message,
-      response: error.response?.data, 
-    });
+    // console.error('Error fetching player wars count:', {
+    //   message: error.message,
+    //   response: error.response?.data, 
+    // });
 
     return []; 
   }

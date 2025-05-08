@@ -51,7 +51,6 @@ export function PlayerTile({ data }: { data: PlayerData }) {
     function formatDateDifference(dateString: string): number {
         try {
             const inputDate = new Date(dateString);
-            // Check if the date is valid
             if (isNaN(inputDate.getTime())) {
                 console.error("Invalid date provided:", dateString);
                 return 0; 
@@ -69,7 +68,7 @@ export function PlayerTile({ data }: { data: PlayerData }) {
     useEffect(() => {
         if (!data.player_tag) return;
 
-        let isMounted = true; // Prevent state updates on unmounted component
+        let isMounted = true;
         setIsLoading(true);
         setError(null);
 
@@ -111,7 +110,7 @@ export function PlayerTile({ data }: { data: PlayerData }) {
             <div className="card-header bg-body-tertiary d-flex justify-content-between align-items-center py-3 px-4 border-bottom-0">
                 <div className="d-flex align-items-center gap-3">
                     <h5 className="mb-0 text-primary fw-bold">{data.name}</h5>
-                    <span className="badge text-bg-secondary text-uppercase px-2 py-1">{data.role}</span>
+                    <span className="badge text-bg-secondary text-uppercase px-2 py-1">{data.role === 'admin' ? 'elder' : data.role}</span>
                 </div>
                 <div className="d-flex align-items-center gap-3 text-muted small">
                     <span><i className="bi bi-star-fill me-1"></i>Level {data.level}</span>

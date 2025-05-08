@@ -42,6 +42,18 @@ export async function selectClanPlayers(): Promise<ClanPlayer[] | undefined> {
     }
 }
 
+export async function selectActiveClanPlayers(): Promise<ClanPlayer[] | undefined> {
+    try {
+        const data = await knexInstance<ClanPlayer>('clash_clan_players')
+        .where('active', true)
+        .select('*');
+        return data;
+    } catch (error: any) {
+        console.error('Error selecting clan players using Knex:', error.message);
+        return undefined; 
+    }
+}
+
 export async function selectSingleClanPlayer(player_tag: string): Promise<ClanPlayer | undefined> {
     try {
         const data = await knexInstance<ClanPlayer>('clash_clan_players')

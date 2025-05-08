@@ -1,7 +1,7 @@
 import express, { Router, Request, Response } from 'express';
 
 import {
-    selectClanPlayers,
+    selectActiveClanPlayers,
     selectNewestClanWarsIDs,
     selectPlayerPastFiveWars,
     selectPlayerWarIDs,
@@ -13,7 +13,7 @@ const router: Router = express.Router();
 
 router.get("/players", async (req, res) => {
     try {
-        const data = await selectClanPlayers();
+        const data = await selectActiveClanPlayers();
 
         if (data === undefined) {
             throw new Error("Failed to fetch clan players from DB");
